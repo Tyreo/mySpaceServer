@@ -1,0 +1,13 @@
+{
+  "apps": [
+    {
+      "name": "api.syreo.cn",
+      "script": "./app.js",
+      "watch": true,
+      "ignore_watch": ["uploads"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
