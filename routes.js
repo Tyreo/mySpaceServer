@@ -205,8 +205,8 @@ router.put(
   async (context, next) => {
     await photo.updateAlbum(
       context.params.id,
-      context.body.name,
-      ctx.state.user
+      context.request.body.name,
+      context.state.user
     );
     await next();
   },
@@ -278,7 +278,10 @@ router.delete(
   async (context, next) => {
     const p = await photo.getPhotoById(context.params.id);
     if (p) {
-      if (p.userId === context.state.user.id || context.state.user.isAdmin) {
+      if (
+        p.userId === context.state.user.id.valueOf() ||
+        context.state.user.isAdmin
+      ) {
         await photo.delete(context.params.id);
       } else {
         context.throw(403, "该用户无权限");
