@@ -320,8 +320,17 @@ router.put(
   auth,
   async (context, next) => {
     if (context.state.user.isAdmin) {
-      context.logger.info(`[phone] 修改照片信息${context.request.body}`);
-      await photo.updatePhoto(context.params.id, context.request.body);
+      let albumId = context.request.querystring
+        ? context.request.query.albumId
+        : "";
+      const albums = await photo.findAlbum(albumId);
+      if (albums) {
+        context.logger.info(`[phone] 修改照片信息${context.request.body}`);
+        await photo.updatePhoto(context.params.id, context.request.body);
+      } else {
+        await photo.delete(context.params.id);
+        context.throw(403, "照片所在相册已经删除");
+      }
     } else {
       context.throw(403, "该用户无权限");
     }
